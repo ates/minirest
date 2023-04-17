@@ -55,7 +55,9 @@ trans_allow([Method | Allow], Res) ->
 do_auth(Request, Handler = #handler{authorization = {M, F}}) ->
     case erlang:apply(M, F, [Request]) of
         ok ->
-            do_parse_params(Request, Handler);
+            do_parse_params(Request, Handler, #{});
+        {ok, Extra} ->
+            do_parse_params(Request, Handler, Extra);
         Response when is_tuple(Response) ->
             Response;
         _ ->
@@ -63,14 +65,15 @@ do_auth(Request, Handler = #handler{authorization = {M, F}}) ->
     end;
 
 do_auth(Request, Handler) ->
-    do_parse_params(Request, Handler).
+    do_parse_params(Request, Handler, #{}).
 
-do_parse_params(Request, Handler) ->
+do_parse_params(Request, Handler, Extra) ->
     Params = #{
         bindings => cowboy_req:bindings(Request),
         query_string => maps:from_list(cowboy_req:parse_qs(Request)),
         headers => cowboy_req:headers(Request),
-        body => #{}
+        body => #{},
+        extra => Extra
     },
     do_read_body(Request, Params, Handler).
 
