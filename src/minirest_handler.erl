@@ -117,8 +117,7 @@ apply_callback(Request, Params, Handler) ->
                         exception => E,
                         reason => R,
                         stacktrace => S}),
-        Message = list_to_binary(io_lib:format("~p, ~0p, ~0p", [E, R, S], [])),
-        {?RESPONSE_CODE_INTERNAL_SERVER_ERROR, 'INTERNAL_ERROR', Message}
+        {?RESPONSE_CODE_INTERNAL_SERVER_ERROR, '500', <<"Internal Server Error">>}
     end.
 
 %% response error
