@@ -117,7 +117,7 @@ apply_callback(Request, Params, Handler) ->
                         exception => E,
                         reason => R,
                         stacktrace => S}),
-        {?RESPONSE_CODE_INTERNAL_SERVER_ERROR, '500', <<"Internal Server Error">>}
+        {?RESPONSE_CODE_INTERNAL_SERVER_ERROR, 'INTERNAL_ERROR', <<"Internal Server Error">>}
     end.
 
 %% response error
