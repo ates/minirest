@@ -34,4 +34,7 @@ encode({file, Path}) ->
 
 %% binary file content
 encode({file_binary, FileName, Binary}) ->
-    {ok, minirest_body_encoder:file_content_type_headers(FileName), Binary}.
+    Headers = #{
+        <<"Content-Disposition">> => <<"attachment; filename=\"", FileName/binary, "\"">>
+    },
+    {ok, maps:merge(Headers, minirest_body_encoder:file_content_type_headers(FileName)), Binary}.
