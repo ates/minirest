@@ -13,15 +13,16 @@
 %% limitations under the License.
 
 -module(minirest_json_encoder).
+
 -include("minirest_http.hrl").
 
 -export([encode/1]).
 
 encode(Body) ->
-    case jsx:is_term(Body) of
-        true ->
-            {ok, ?DEFAULT_RESPONSE_HEADERS, jsx:encode(Body)};
-        false ->
+    try
+        {ok, ?DEFAULT_RESPONSE_HEADERS, iolist_to_binary(json:encode(Body))}
+    catch
+        _:_Error:_Stack ->
             Response = {
                 ?RESPONSE_CODE_INTERNAL_SERVER_ERROR,
                 #{<<"content-type">> => <<"text/plain">>},
